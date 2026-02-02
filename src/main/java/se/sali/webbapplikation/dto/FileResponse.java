@@ -9,7 +9,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RegisterResponse {
+public class FileResponse {
     private UUID id;
-    private String username;
+    private String name;
+    private String content;
+    private UUID ownerId;
+    private UUID folderId;
 }

@@ -1,5 +1,6 @@
 package se.sali.webbapplikation.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +12,10 @@ import se.sali.webbapplikation.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
-
-    @RestController
-    @RequestMapping("/test")
-    public class TestController {
-
-        @GetMapping("/hello")
-        public String hello() {
-            return "Hello! JWT fungerar!";
-        }
-    }
+    private final AuthService authService;
 
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest request) {

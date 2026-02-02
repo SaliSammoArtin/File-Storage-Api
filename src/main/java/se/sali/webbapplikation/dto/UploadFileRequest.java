@@ -7,9 +7,10 @@ import lombok.Setter;
 import java.util.UUID;
 
 @NoArgsConstructor
-@Getter
 @Setter
-public class RegisterResponse {
-    private UUID id;
-    private String username;
+@Getter
+public class UploadFileRequest {
+    private String name;
+    private String content;
+    private UUID folderId;
 }

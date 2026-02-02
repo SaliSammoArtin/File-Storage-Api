@@ -53,7 +53,7 @@ public class AuthService {
     public LoginResponse login(LoginRequest request) {
         String username = request.getUsername().trim();
 
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        var userOpt = userRepository.findByUsername(username);
         if (userOpt.isEmpty()) {
             throw new RuntimeException("Invalid credentials");
         }
