@@ -23,42 +23,56 @@ public class FolderController {
     private final FolderService folderService;
 
     @PostMapping
-    public ResponseEntity<FolderResponse> createFolder(@RequestBody CreateFolderRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+    public ResponseEntity<?> createFolder(@RequestBody CreateFolderRequest request) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) auth.getPrincipal();
 
-        Folder folder = folderService.createFolder(request.getName(), user);
-        FolderResponse response = new FolderResponse();
-        response.setId(folder.getId());
-        response.setName(folder.getName());
-        response.setOwnerId(folder.getOwner().getId());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<FolderResponse>> getFolder() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-
-        List<FolderResponse> responses = new ArrayList<>();
-        List<Folder> folders = folderService.getUserFolders(user);
-        for (Folder folder : folders) {
+            Folder folder = folderService.createFolder(request.getName(), user);
             FolderResponse response = new FolderResponse();
             response.setId(folder.getId());
             response.setName(folder.getName());
             response.setOwnerId(folder.getOwner().getId());
-            responses.add(response);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to create folder");
         }
-        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getFolder() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) auth.getPrincipal();
+
+            List<FolderResponse> responses = new ArrayList<>();
+            List<Folder> folders = folderService.getUserFolders(user);
+            for (Folder folder : folders) {
+                FolderResponse response = new FolderResponse();
+                response.setId(folder.getId());
+                response.setName(folder.getName());
+                response.setOwnerId(folder.getOwner().getId());
+                responses.add(response);
+            }
+            return ResponseEntity.ok(responses);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to retrieve folders");
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFolder(@PathVariable UUID id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
+    public ResponseEntity<?> deleteFolder(@PathVariable UUID id) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) auth.getPrincipal();
 
-        folderService.deleteFolder(id, user);
-        return ResponseEntity.noContent().build();
+            folderService.deleteFolder(id, user);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to delete folder");
+        }
     }
 }

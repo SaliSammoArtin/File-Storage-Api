@@ -27,6 +27,13 @@ public class AuthService {
     @Autowired
     private JWTService jwtService;
 
+
+    /**
+     * Registers a new user in the system
+     * @param request contains username and password for the new user
+     * @return RegisterResponse with the user's id and username
+     * @throws UserAlreadyExistsException if the username already exists
+     */
     public RegisterResponse register(RegisterRequest request) {
 
         String username = request.getUsername().trim();
@@ -50,6 +57,12 @@ public class AuthService {
         return response;
     }
 
+    /**
+     * Logs in a user and generates a JWT token
+     * @param request contains username and password
+     * @return LoginResponse with JWT token and message
+     * @throws RuntimeException if username or password is incorrect
+     */
     public LoginResponse login(LoginRequest request) {
         String username = request.getUsername().trim();
 

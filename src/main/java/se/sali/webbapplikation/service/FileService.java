@@ -21,6 +21,15 @@ public class FileService {
     @Autowired
     private IFolderRepository folderRepository;
 
+    /**
+     * Uploads a new file to the system
+     * @param name the name of the file
+     * @param content the text content of the file
+     * @param folderId optional folder ID where the file should be stored (can be null)
+     * @param owner the user who owns the file
+     * @return the saved File entity
+     * @throws RuntimeException if folder is not found or user is unauthorized
+     */
     public File uploadFile(String name, String content, UUID folderId, User owner) {
         Folder folder = null;
         if (folderId != null) {
@@ -40,10 +49,21 @@ public class FileService {
         return fileRepository.save(file);
     }
 
+    /**
+     * Retrieves all files owned by a specific user
+     * @param owner the user whose files should be retrieved
+     * @return list of files belonging to the user
+     */
     public List<File> getUserFiles(User owner) {
         return fileRepository.findByOwner(owner);
     }
 
+    /**
+     * Deletes a file if the user is authorized
+     * @param fileId the ID of the file to delete
+     * @param owner the user attempting to delete the file
+     * @throws RuntimeException if file is not found or user is unauthorized
+     */
     public void deleteFile(UUID fileId, User owner) {
         Optional<File> fileOpt = fileRepository.findById(fileId);
 
@@ -60,6 +80,13 @@ public class FileService {
         fileRepository.delete(file);
     }
 
+    /**
+     * Downloads a file if the user is authorized
+     * @param fileId the ID of the file to download
+     * @param owner the user attempting to download the file
+     * @return the File entity with content
+     * @throws RuntimeException if file is not found or user is unauthorized
+     */
     public File downloadFile(UUID fileId, User owner) {
         Optional<File> fileOpt = fileRepository.findById(fileId);
 
