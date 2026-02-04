@@ -1,6 +1,6 @@
 package se.sali.webbapplikation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.sali.webbapplikation.model.File;
 import se.sali.webbapplikation.model.Folder;
@@ -13,13 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileService {
 
-    @Autowired
-    private IFileRepository fileRepository;
-
-    @Autowired
-    private IFolderRepository folderRepository;
+    private final IFileRepository fileRepository;
+    private final IFolderRepository folderRepository;
 
     /**
      * Uploads a new file to the system
@@ -34,7 +32,7 @@ public class FileService {
         Folder folder = null;
         if (folderId != null) {
             Optional<Folder> folderOpt = folderRepository.findById(folderId);
-            if (folderOpt.isEmpty() || !folderOpt.get().getOwner().equals(owner)) {
+            if (folderOpt.isEmpty() || !folderOpt.get().getOwner().getId().equals(owner.getId())) {
                 throw new RuntimeException("Folder not found or unauthorized");
             }
             folder = folderOpt.get();
@@ -73,7 +71,7 @@ public class FileService {
 
         File file = fileOpt.get();
 
-        if (!file.getOwner().equals(owner)) {
+        if (!file.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("Unauthorized");
         }
 
@@ -96,7 +94,7 @@ public class FileService {
 
         File file = fileOpt.get();
 
-        if (!file.getOwner().equals(owner)) {
+        if (!file.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("Unauthorized");
         }
 

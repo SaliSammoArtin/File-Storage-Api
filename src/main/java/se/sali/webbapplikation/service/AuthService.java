@@ -1,6 +1,6 @@
 package se.sali.webbapplikation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.sali.webbapplikation.dto.LoginRequest;
@@ -16,16 +16,12 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private IUserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JWTService jwtService;
+    private final IUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private  final JWTService jwtService;
 
 
     /**
@@ -37,7 +33,6 @@ public class AuthService {
     public RegisterResponse register(RegisterRequest request) {
 
         String username = request.getUsername().trim();
-        userRepository.findByUsername(username);
 
         Optional<User> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {

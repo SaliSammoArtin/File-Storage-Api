@@ -1,6 +1,6 @@
 package se.sali.webbapplikation.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.sali.webbapplikation.model.Folder;
 import se.sali.webbapplikation.model.User;
@@ -11,9 +11,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FolderService {
-
-    private IFolderRepository folderRepository;
+    private final IFolderRepository folderRepository;
 
     /**
      * Creates a new folder for a user
@@ -53,8 +53,12 @@ public class FolderService {
         }
 
         Folder folder = folderOpt.get();
+        System.out.println("Folder owner ID: " + folder.getOwner().getId());
+        System.out.println("Request owner ID: " + owner.getId());
+        System.out.println("Are equal: " + folder.getOwner().getId().equals(owner.getId()));
 
-        if (!folder.getOwner().equals(owner)) {
+
+        if (!folder.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("Unauthorized");
         }
 

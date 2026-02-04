@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/file")
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;

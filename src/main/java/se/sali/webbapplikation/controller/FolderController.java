@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequestMapping("/folder")
 @RequiredArgsConstructor
 public class FolderController {
-
     private final FolderService folderService;
 
     @PostMapping
@@ -36,6 +35,7 @@ public class FolderController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to create folder");
         }
     }
