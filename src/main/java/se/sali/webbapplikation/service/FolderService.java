@@ -53,10 +53,6 @@ public class FolderService {
         }
 
         Folder folder = folderOpt.get();
-        System.out.println("Folder owner ID: " + folder.getOwner().getId());
-        System.out.println("Request owner ID: " + owner.getId());
-        System.out.println("Are equal: " + folder.getOwner().getId().equals(owner.getId()));
-
 
         if (!folder.getOwner().getId().equals(owner.getId())) {
             throw new RuntimeException("Unauthorized");

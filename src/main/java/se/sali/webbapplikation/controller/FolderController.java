@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/folder")
 @RequiredArgsConstructor
@@ -32,6 +35,8 @@ public class FolderController {
             response.setId(folder.getId());
             response.setName(folder.getName());
             response.setOwnerId(folder.getOwner().getId());
+            response.add(linkTo(methodOn(FolderController.class).getFolder()).withRel("all-folders"));
+            response.add(linkTo(methodOn(FolderController.class).deleteFolder(folder.getId())).withRel("delete"));
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -53,6 +58,7 @@ public class FolderController {
                 response.setId(folder.getId());
                 response.setName(folder.getName());
                 response.setOwnerId(folder.getOwner().getId());
+                response.add(linkTo(methodOn(FolderController.class).deleteFolder(folder.getId())).withRel("delete"));
                 responses.add(response);
             }
             return ResponseEntity.ok(responses);

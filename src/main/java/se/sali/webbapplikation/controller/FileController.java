@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/file")
 @RequiredArgsConstructor
@@ -38,6 +41,9 @@ public class FileController {
             response.setFolderId(file.getFolder() != null ? file.getFolder().getId() : null);
             response.setOwnerId(file.getOwner().getId());
             response.setId(file.getId());
+            response.add(linkTo(methodOn(FileController.class).getUserFiles()).withRel("all-files"));
+            response.add(linkTo(methodOn(FileController.class).deleteFile(file.getId())).withRel("delete"));
+            response.add(linkTo(methodOn(FileController.class).downloadFile(file.getId())).withRel("download"));
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
@@ -62,6 +68,8 @@ public class FileController {
                 response.setContent(file.getContent());
                 response.setFolderId(file.getFolder() != null ? file.getFolder().getId() : null);
                 response.setOwnerId(file.getOwner().getId());
+                response.add(linkTo(methodOn(FileController.class).deleteFile(file.getId())).withRel("delete"));
+                response.add(linkTo(methodOn(FileController.class).downloadFile(file.getId())).withRel("download"));
                 responses.add(response);
             }
             return ResponseEntity.ok(responses);
@@ -84,6 +92,8 @@ public class FileController {
             response.setContent(file.getContent());
             response.setFolderId(file.getFolder() != null ? file.getFolder().getId() : null);
             response.setOwnerId(file.getOwner().getId());
+            response.add(linkTo(methodOn(FileController.class).deleteFile(file.getId())).withRel("delete"));
+
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
