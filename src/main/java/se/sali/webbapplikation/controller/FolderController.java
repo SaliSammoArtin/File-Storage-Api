@@ -9,6 +9,7 @@ import se.sali.webbapplikation.dto.CreateFolderRequest;
 import se.sali.webbapplikation.dto.FolderResponse;
 import se.sali.webbapplikation.model.Folder;
 import se.sali.webbapplikation.model.User;
+import se.sali.webbapplikation.security.AuthUtils;
 import se.sali.webbapplikation.service.FolderService;
 
 import java.util.ArrayList;
@@ -23,12 +24,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class FolderController {
     private final FolderService folderService;
+    private final AuthUtils authUtils;
 
     @PostMapping
     public ResponseEntity<?> createFolder(@RequestBody CreateFolderRequest request) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             Folder folder = folderService.createFolder(request.getName(), user);
             FolderResponse response = new FolderResponse();
@@ -49,7 +51,7 @@ public class FolderController {
     public ResponseEntity<?> getFolder() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             List<FolderResponse> responses = new ArrayList<>();
             List<Folder> folders = folderService.getUserFolders(user);
@@ -71,7 +73,7 @@ public class FolderController {
     public ResponseEntity<?> deleteFolder(@PathVariable UUID id) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             folderService.deleteFolder(id, user);
             return ResponseEntity.noContent().build();

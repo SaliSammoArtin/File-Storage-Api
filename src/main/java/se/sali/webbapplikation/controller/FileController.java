@@ -9,6 +9,7 @@ import se.sali.webbapplikation.dto.FileResponse;
 import se.sali.webbapplikation.dto.UploadFileRequest;
 import se.sali.webbapplikation.model.File;
 import se.sali.webbapplikation.model.User;
+import se.sali.webbapplikation.security.AuthUtils;
 import se.sali.webbapplikation.service.FileService;
 
 import java.util.ArrayList;
@@ -23,12 +24,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
+    private final AuthUtils authUtils;
 
     @PostMapping
     public ResponseEntity<?> uploadFile(@RequestBody UploadFileRequest request) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             File file = fileService.uploadFile(
                     request.getName(),
@@ -57,7 +59,7 @@ public class FileController {
     public ResponseEntity<?> getUserFiles() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             List<FileResponse> responses = new ArrayList<>();
             List<File> files = fileService.getUserFiles(user);
@@ -82,7 +84,7 @@ public class FileController {
     public ResponseEntity<?> downloadFile(@PathVariable UUID id) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             File file = fileService.downloadFile(id, user);
 
@@ -107,7 +109,7 @@ public class FileController {
     public ResponseEntity<?> deleteFile(@PathVariable UUID id) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) auth.getPrincipal();
+            User user = authUtils.getCurrentUser(auth);
 
             fileService.deleteFile(id, user);
             return ResponseEntity.noContent().build();
