@@ -43,11 +43,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             userRepository.save(user);
         } else {
             user = userOpt.get();
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-
-            response.sendRedirect("/folder");
         }
+
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        response.sendRedirect("/folder");
     }
 }

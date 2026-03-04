@@ -31,10 +31,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.oauth2Login(oauth -> oauth.successHandler(oauth2SuccessHandler));
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login").permitAll()
                         .anyRequest().authenticated())
+        .oauth2Login(oauth -> oauth
+                .successHandler(oauth2SuccessHandler)
+                .defaultSuccessUrl("/folder", true))
+                .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
