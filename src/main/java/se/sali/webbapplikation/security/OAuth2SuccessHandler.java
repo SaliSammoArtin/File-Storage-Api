@@ -39,8 +39,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         if (userOpt.isEmpty()) {
             user = new User();
             user.setUsername(githubUsername);
-            user.setPasswordHash(passwordEncoder.encode("oauth2-no-password"));
+            user.setPasswordHash(null);
+            String email = oauth2User.getAttribute("email");
+            user.setEmail(email);
             userRepository.save(user);
+
         } else {
             user = userOpt.get();
         }

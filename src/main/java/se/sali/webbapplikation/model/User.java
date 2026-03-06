@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "users")
@@ -23,5 +24,14 @@ public class User {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Column
+    private String email;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Folder> folders;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<File> files;
 
 }

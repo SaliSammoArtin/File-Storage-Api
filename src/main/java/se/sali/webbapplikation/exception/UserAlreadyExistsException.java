@@ -1,4 +1,4 @@
-package se.sali.webbapplikation.exeption;
+package se.sali.webbapplikation.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

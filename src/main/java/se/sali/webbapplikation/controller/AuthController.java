@@ -3,11 +3,8 @@ package se.sali.webbapplikation.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import se.sali.webbapplikation.dto.LoginRequest;
-import se.sali.webbapplikation.dto.LoginResponse;
-import se.sali.webbapplikation.dto.RegisterRequest;
-import se.sali.webbapplikation.dto.RegisterResponse;
-import se.sali.webbapplikation.exeption.UserAlreadyExistsException;
+import se.sali.webbapplikation.dto.*;
+import se.sali.webbapplikation.exception.UserAlreadyExistsException;
 import se.sali.webbapplikation.service.AuthService;
 
 @RestController
@@ -23,9 +20,10 @@ public class AuthController {
             RegisterResponse response = authService.register(request);
             return ResponseEntity.ok(response);
         } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(409).body("Username already exists");
+            return ResponseEntity.status(409).body(new ErrorResponse("Username already exists", 409));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Registration failed");
+            ErrorResponse error = new ErrorResponse("registration failed", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 
@@ -35,9 +33,10 @@ public class AuthController {
             LoginResponse response = authService.login(request);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body(new ErrorResponse("Invalid credentials", 401));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Login failed");
+            ErrorResponse error = new ErrorResponse("login failed", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 }

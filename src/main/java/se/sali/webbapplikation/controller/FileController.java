@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import se.sali.webbapplikation.dto.ErrorResponse;
 import se.sali.webbapplikation.dto.FileResponse;
 import se.sali.webbapplikation.dto.UploadFileRequest;
 import se.sali.webbapplikation.model.File;
@@ -49,9 +50,9 @@ public class FileController {
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+            return ResponseEntity.status(400).body(new ErrorResponse(e.getMessage(), 400));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("File upload failed");
+            return ResponseEntity.status(500).body(new ErrorResponse("File upload failed", 500));
         }
     }
 
@@ -76,7 +77,8 @@ public class FileController {
             }
             return ResponseEntity.ok(responses);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to retrieve files");
+            ErrorResponse error = new ErrorResponse("Failed to retrieve file", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 
@@ -99,9 +101,11 @@ public class FileController {
 
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            ErrorResponse error = new ErrorResponse(e.getMessage(), 404);
+            return ResponseEntity.status(404).body(error);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to download file");
+            ErrorResponse error = new ErrorResponse("Failed to download file", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 
@@ -114,9 +118,11 @@ public class FileController {
             fileService.deleteFile(id, user);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            ErrorResponse error = new ErrorResponse(e.getMessage(), 404);
+            return ResponseEntity.status(404).body(error);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to delete file");
+            ErrorResponse error = new ErrorResponse("Failed to delete file", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 }

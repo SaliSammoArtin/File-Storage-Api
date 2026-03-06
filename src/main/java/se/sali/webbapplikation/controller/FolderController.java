@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import se.sali.webbapplikation.dto.CreateFolderRequest;
+import se.sali.webbapplikation.dto.ErrorResponse;
 import se.sali.webbapplikation.dto.FolderResponse;
 import se.sali.webbapplikation.model.Folder;
 import se.sali.webbapplikation.model.User;
@@ -40,10 +41,10 @@ public class FolderController {
             response.add(linkTo(methodOn(FolderController.class).getFolder()).withRel("all-folders"));
             response.add(linkTo(methodOn(FolderController.class).deleteFolder(folder.getId())).withRel("delete"));
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status(201).body(response);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Failed to create folder");
+            ErrorResponse error = new ErrorResponse("Failed to create folder", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 
@@ -65,7 +66,8 @@ public class FolderController {
             }
             return ResponseEntity.ok(responses);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to retrieve folders");
+            ErrorResponse error = new ErrorResponse("Failed to get folders", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 
@@ -78,9 +80,11 @@ public class FolderController {
             folderService.deleteFolder(id, user);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            ErrorResponse error = new ErrorResponse(e.getMessage(), 404);
+            return ResponseEntity.status(404).body(error);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to delete folder");
+            ErrorResponse error = new ErrorResponse("Failed to delete folder", 500);
+            return ResponseEntity.status(500).body(error);
         }
     }
 }

@@ -7,7 +7,7 @@ import se.sali.webbapplikation.dto.LoginRequest;
 import se.sali.webbapplikation.dto.LoginResponse;
 import se.sali.webbapplikation.dto.RegisterRequest;
 import se.sali.webbapplikation.dto.RegisterResponse;
-import se.sali.webbapplikation.exeption.UserAlreadyExistsException;
+import se.sali.webbapplikation.exception.UserAlreadyExistsException;
 import se.sali.webbapplikation.model.User;
 import se.sali.webbapplikation.repository.IUserRepository;
 import se.sali.webbapplikation.security.JWTService;
